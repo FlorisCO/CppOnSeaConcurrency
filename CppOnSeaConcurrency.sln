@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Exercise1", "Exercise1\Exer
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PromiseFutureException", "PromiseFutureException\PromiseFutureException.vcxproj", "{99C4A32F-2700-49BF-81E1-E03977B1BEBF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IsIntAtomic", "IsIntAtomic\IsIntAtomic.vcxproj", "{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{99C4A32F-2700-49BF-81E1-E03977B1BEBF}.Release|x64.Build.0 = Release|x64
 		{99C4A32F-2700-49BF-81E1-E03977B1BEBF}.Release|x86.ActiveCfg = Release|Win32
 		{99C4A32F-2700-49BF-81E1-E03977B1BEBF}.Release|x86.Build.0 = Release|Win32
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Debug|x64.ActiveCfg = Debug|x64
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Debug|x64.Build.0 = Debug|x64
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Debug|x86.ActiveCfg = Debug|Win32
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Debug|x86.Build.0 = Debug|Win32
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Release|x64.ActiveCfg = Release|x64
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Release|x64.Build.0 = Release|x64
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Release|x86.ActiveCfg = Release|Win32
+		{4FFF2E1D-C444-49D4-A291-151E5D7EFE4A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

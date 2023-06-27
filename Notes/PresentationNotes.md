@@ -7,6 +7,9 @@ Contact:
 - E-mail: schulung@ModernesCpp.de
 - Web: www.ModernesCpp.de
 
+* https://www.modernescpp.org
+* https://www.modernescpp.com/
+
 ## Disclaimer
 
 These are my personal notes based on the slides of the workshop "Concurrency in Modern C++". They are not complete, may contain errors, and are just meant as an extension or abbreviation of points I found personally important.
@@ -131,3 +134,55 @@ Thread-safe initialization of data:
 
 - Essentially equivalent to a shared_ptr. [read me](https://www.modernescpp.com/index.php/component/content/article/43-blog/multithreading/168-promise-and-future?Itemid=239)
     std::shared_future<> f = p.get_future();
+
+## C++20
+
+Different powerpoint and new page reference:
+[Concurrency in Modern C++](https://www.modernescpp.org/wp-content/uploads/2023/06/ConcurrencyTelAviv.pdf)
+
+### Atomics
+
+- std::atomic_flag is the only atomic that is guaranteed to be lock-free. It is capable of two operations:
+    * Clear
+    * Set_and_Get (returns old value)
+- Other atomics, especially the simpler ones, are usually lock-free, depending on the compiler. A shared-pointer is at the moment definitely not lock-free.
+
+- compare_exchange_strong: Sets the value with the desired value, only if the current value is the expected value. If it isn't the expected value, then the current value is set to the expected value. Think of it as an atomic transaction. Requires the type to be memcopare-able.
+
+For example:
+```cpp
+    T fetch_mult(T& shared, T mult) {
+        T old = shared.load();
+        while (!shared.compare_exchange_strong(oldValue, oldValue * mult));
+        return oldValue;
+    }
+```
+
+- Synchronization is now available through atomics due to the new signal and wait functions. For example, using a bool: [godbolt.org/z/xGrjGs814](https://godbolt.org/z/xGrjGs814).
+
+- A value can be made thread-safe, by wrapping it in std::atomic_ref.
+
+- A semaphore can be locked and unlocked by different threads, where a mutex cannot.
+
+- An atomic wait blocks as long as the value is as expected.
+
+- The ping-pong problem is now implemented in three ways:
+    * pingpongAtomicFlag(s).cpp
+    * pingPongConditionVariable.cpp
+    * pingPongSemaphore.cpp
+
+    See the performance results on slide 14.
+
+- A latch can only be used once.
+
+- A barrier can be used multiple times.
+    See example [partTimeWorkers.cpp](https://godbolt.org/z/xv3YhqY8b)
+
+- jthread is a joining thread (interruptible)
+    When you want to stop a thread, you want to notify it, rather than abort it (because that may leave values in a bad state => chance for deadlocks)
+    It joins in the destructor => RAII type
+    [thread.cpp](https://godbolt.org/z/s89vnqscP)
+    [jthread.cpp](https://godbolt.org/z/jjKdKK6Yo)
+    => cfr cancellationtoken with a std::stop_token
+
+The current trendsetters for C++ (influencers) is Woven by Toyota.
