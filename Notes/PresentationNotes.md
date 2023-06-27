@@ -104,5 +104,30 @@ Thread-safe initialization of data:
 
 - The code as shown only works for one producer and one consumer, multiple consumers need a different solution. (Also read [Be Aware of the Traps of Condition Variables](https://www.modernescpp.com/index.php/c-core-guidelines-be-aware-of-the-traps-of-condition-variables))
 
-## Tasks (vs threads)
+## Tasks (vs threads) (Slide 76+)
 
+- With a task, the thread creation is optional and up to the compiler/infrastructure.
+
+- Example: dotProductAsync.cpp
+
+- From C++17, an ExecutionPolicy is available in some overloads that let you request the function to be handled with multiple threads to speed up its processing.
+
+### Promise-Future
+
+- A future-promise pair is a one-way direction, the communication doesn't flow the other way. When the future is ready, it is destroyed, when the promise is read, the shared channel is destroyed ...
+
+- With packaged_task, you can prepare a data packet for a future, and let it execute later.
+
+- Vectorization is when the CPU supports vector operations that use larger registers to do bulk processing.
+
+- Read [this blog post](https://www.modernescpp.com/index.php/performance-of-the-parallel-stl-algorithmn)
+
+- Creating a promise and getting the future means you have two objects that are connected and can be managed by any thread as desired.
+
+- Exercise: promiseFuture.cpp; make it so that the division by zero throws an exception and is caught by the thread waiting on the future result. Not throwing an exception would generate an uncatchable exception otherwise.
+    * Solution: promiseFutureException.cpp
+
+### Shared_future
+
+- Essentially equivalent to a shared_ptr. [read me](https://www.modernescpp.com/index.php/component/content/article/43-blog/multithreading/168-promise-and-future?Itemid=239)
+    std::shared_future<> f = p.get_future();
