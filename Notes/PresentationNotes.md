@@ -186,3 +186,5 @@ For example:
     => cfr cancellationtoken with a std::stop_token
 
 The current trendsetters for C++ (influencers) is Woven by Toyota.
+
+- synced out will flush when it is destructed.
