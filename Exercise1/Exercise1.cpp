@@ -1,20 +1,80 @@
-// Exercise1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include <iostream>
 
 #include <iostream>
+#include <thread>
+#include <mutex>
+
+// #include <condition_variable>
+// #include <vector>
+
+bool bPingPongBall {false};
+
+constexpr int maxIterations = 50;
+
+std::atomic_int iterator { 0 };
+
+std::mutex mxPingPongLock {};
+
+std::condition_variable cvPing {};
+
+std::condition_variable cvPong {};
+
+void SetPingPongBall(bool state)
+{
+    bPingPongBall = state;
+    std::cout << "Game state: " << (bPingPongBall ? "Ping" : "Pong") << std::endl;
+}
+
+void PingPong(bool desiredState, std::condition_variable & cvWait, std::condition_variable & cvSignal)
+{
+    while (iterator < maxIterations)
+    {
+        std::unique_lock<std::mutex> ul(mxPingPongLock);
+
+        // Note, the condition variable has the lock when it checks the conditional
+        cvWait.wait(ul, [desiredState] {return bPingPongBall != desiredState; });
+
+        SetPingPongBall(desiredState);
+        cvSignal.notify_one();
+
+        iterator++;
+    }
+}
+
+void Ping()
+{
+    PingPong(true, cvPong, cvPing);
+    /*for (int i = 0; i < iterations; i++)
+    {
+        SetPingPongBall(true);
+        cvPing.notify_one();
+
+        std::unique_lock<std::mutex> ul(mxPingPongLock);
+        cvPong.wait(ul, []{return !bPingPongBall;});
+    }*/
+}
+
+void Pong()
+{
+    PingPong(false, cvPing, cvPong);
+
+    /*for (int i = 0; i < iterations; i++)
+    {
+        std::unique_lock<std::mutex> ul(mxPingPongLock);
+        cvPing.wait(ul, [] {return static_cast<bool>(bPingPongBall); });
+
+        SetPingPongBall(false);
+        cvPong.notify_one();
+    }*/
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::thread ping(Ping);
+    std::thread pong(Pong);
+
+    ping.join();
+    pong.join();
+
+    std::cout << "Game ended\n";
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
